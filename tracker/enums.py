@@ -4,15 +4,15 @@ class Color(Enum):
     RED = "r"
     BLACK = "b"
     GREEN = "g"
-    OTHER = "00"
+    OTHER = ""
     
 class Parity(Enum):
-    ODD = 1
-    EVEN = 2  
-    ERR = 3
+    ODD = "o"
+    EVEN = "e"
+    ERR = ""
     
 class Range(Enum):
-    HIGH = 1
-    LOW = 2  
-    ERR = 3
+    HIGH = "h"
+    LOW = "l"  
+    ERR = ""
     
