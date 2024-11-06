@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roulette System</title>
+
+    <h1 class='text-center'> Roulette System<h1/>
+
+    <script>
+        function logNumber(number) {
+            // Implement your JavaScript logic here to handle the button press
+            console.log("Button pressed:", number);
+        }
+    </script>
+
+</head>
+<body>
+    <div id="number-buttons">
+        {% for number in numbers %}
+            <button onclick="logNumber(number)">{{ number }}</button>
+        {% endfor %}
+    </div>
+</body>
+</html>
