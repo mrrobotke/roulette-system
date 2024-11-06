@@ -80,8 +80,8 @@
 
     <div class="flex square.style.justifyContent">
 
-    {% comment %} <!-- Reset button to clear tables -->
-    <button class="reset-button" onclick="resetNumberTable()">Reset Number Table</button> {% endcomment %}
+    <!-- Reset button to clear tables -->
+    <button class="reset-button" onclick="resetNumberTable()">Reset Number Table</button>
 
     <!-- Reset button to clear tables -->
     <button class="reset-button" onclick="resetColorTable()">Reset Color Table</button>
@@ -337,8 +337,14 @@
         }
 
         // Function to reset range table
-        //function resetNumberTable() {
-        //    document.getElementById("number-statistics").innerHTML = "";}
+        function resetNumberTable() {
+            container = document.getElementById("number-statistics");
+
+              // Clear all child elements inside the container
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+            }
+        }
 
          // Function to reset color table
          function resetColorTable() {
