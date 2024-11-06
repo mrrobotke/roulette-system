@@ -21,7 +21,6 @@ class OddEvenEntry(models.Model):
     PARITY_CHOICES = [(par.value, par.name) for par in Parity]
     
     parity = models.IntegerField(
-        max_length=2,
         choices=PARITY_CHOICES,
         default=Parity.ERR.value
     )
@@ -34,7 +33,6 @@ class HighLowEntry(models.Model):
     RANGE_CHOICES = [(ranges.value, ranges.name) for ranges in Parity]
     
     range_value = models.IntegerField(
-        max_length=2,
         choices=RANGE_CHOICES,
         default=Range.ERR.value
     )
