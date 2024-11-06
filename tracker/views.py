@@ -2,15 +2,16 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .utils import log_request
+from .utils import log_request, reset_table
 
 # Create your views here.
 
-class IndexView(APIView):
 
-    def index(self, request):
-        numbers = list(range(37))  # Creates a list of numbers from 0 to 36
-        return render(request, 'index.html', {'numbers': numbers})
+def index(request):
+    
+    numbers = list(range(37))  # Generates numbers from 0 to 36
+     
+    return render(request, 'index.html', {'numbers': numbers})
 
 
 
@@ -24,5 +25,14 @@ class NumberPressView(APIView):
         # Create entry in DB
         response = log_request(number)
 
+        # Respond with a success message
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class ResetTableView(APIView):
+    def delete(self, request, table, *args, **kwargs):
+        
+        response = reset_table(table)
+        
         # Respond with a success message
         return Response(response, status=status.HTTP_200_OK)

@@ -2,23 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Roulette System</title>
-
-    <h1 class='text-center'> Roulette System<h1/>
-
-    <script>
-        function logNumber(number) {
-            // Implement your JavaScript logic here to handle the button press
-            console.log("Button pressed:", number);
-        }
-    </script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette System Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+        .number-buttons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+        .number-button { padding: 10px; font-size: 16px; cursor: pointer; }
+        .reset-button { margin-top: 20px; padding: 10px 20px; }
+    </style>
 </head>
 <body>
-    <div id="number-buttons">
+
+    <h1>Roulette System Tracker</h1>
+
+    <!-- Buttons 0-36 for selecting the number -->
+    <div class="number-buttons">
         {% for number in numbers %}
-            <button onclick="logNumber(number)">{{ number }}</button>
+            <button class="number-button" onclick="logNumber({{ number }})">{{ number }}</button>
         {% endfor %}
     </div>
+
+    <!-- Tables for tracking number attributes -->
+    <h2>Tracking Tables</h2>
+    <div id="tables-container">
+
+        <!-- Table 1: Actual Number Clicked -->
+        <h3>Actual Number Clicked</h3>
+        <table id="number-table">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Number entries will be dynamically added here -->
+            </tbody>
+        </table>
+
+        <!-- Table 2: Color (Red/Black) -->
+        <h3>Color</h3>
+        <table id="color-table">
+            <thead>
+                <tr>
+                    <th>Color</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Color entries will be dynamically added here -->
+            </tbody>
+        </table>
+
+        <!-- Table 3: Parity (Odd/Even) -->
+        <h3>Parity</h3>
+        <table id="parity-table">
+            <thead>
+                <tr>
+                    <th>Parity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Parity entries will be dynamically added here -->
+            </tbody>
+        </table>
+
+        <!-- Table 4: Range (High/Low) -->
+        <h3>Range</h3>
+        <table id="range-table">
+            <thead>
+                <tr>
+                    <th>Range</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Range entries will be dynamically added here -->
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Reset button to clear tables -->
+    <button class="reset-button" onclick="resetTables()">Reset All Tables</button>
+
+    <script>
+        // Define color, parity, and range mappings
+        const colors = { "red": [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36], "black": [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35] };
+        const parity = (num) => num % 2 === 0 ? 'Even' : 'Odd';
+        const range = (num) => num >= 1 && num <= 18 ? 'Low' : 'High';
+
+        // Function to log number and update tables
+        function logNumber(number) {
+            // Determine color, parity, and range
+            const color = colors.red.includes(number) ? 'Red' : colors.black.includes(number) ? 'Black' : 'Green';
+            const parityValue = parity(number);
+            const rangeValue = range(number);
+
+            // Append data to respective tables
+            appendToTable('number-table', number);
+            appendToTable('color-table', color);
+            appendToTable('parity-table', parityValue);
+            appendToTable('range-table', rangeValue);
+        }
+
+        // Function to append data to table
+        function appendToTable(tableId, value) {
+            const table = document.getElementById(tableId).querySelector('tbody');
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            row.appendChild(cell);
+            table.appendChild(row);
+        }
+
+        // Function to reset all tables
+        function resetTables() {
+            document.querySelectorAll("table tbody").forEach(tbody => tbody.innerHTML = "");
+        }
+    </script>
 </body>
 </html>

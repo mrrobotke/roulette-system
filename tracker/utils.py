@@ -19,7 +19,7 @@ def log_request(number):
     
     except Exception as e:
         
-        logger.info(f"Error saving value: {type(e).__name__} - {str(e)}")
+        logger.error(f"Error saving value: {type(e).__name__} - {str(e)}")
         
         return {"message":f"Error saving {number} value: {type(e).__name__} - {str(e)}", "status":"error"}
     
@@ -67,11 +67,24 @@ def get_range(number):
 #******************************* Reset Table ******************************************************
 
 def reset_table(request, table_name):
-    if table_name == "color":
-        BlackRedEntry.objects.all().delete()
-    elif table_name == "parity":
-        OddEvenEntry.objects.all().delete()
-    elif table_name == "range":
-        HighLowEntry.objects.all().delete()
+    
+    try:
+        if table_name == "color":
+            BlackRedEntry.objects.all().delete()
+        elif table_name == "parity":
+            OddEvenEntry.objects.all().delete()
+        elif table_name == "range":
+            HighLowEntry.objects.all().delete()
+        elif table_name == "all": # Delete all entries
+            BlackRedEntry.objects.all().delete()
+            OddEvenEntry.objects.all().delete()
+            HighLowEntry.objects.all().delete()
+            
+        return {"message": f"All records in the {table_name} table(s) have been deleted successfully"}
+    
+    except Exception as e:
         
-    return {"message": f"All records in the {table_name} have been deleted successfully"}
+        logger.error(f"Error saving value: {type(e).__name__} - {str(e)}")
+        
+        return {"message":f"Error clearing records from {table_name} table(s): {type(e).__name__} - {str(e)}", "status":"error"}
+    
