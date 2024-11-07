@@ -1,159 +1,165 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roulette System Tracker</title>
-    <style>
+
+    <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+
+    {% comment %} <style>
         body { font-family: Arial, sans-serif; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
         .number-buttons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
         .number-button { padding: 10px; font-size: 16px; cursor: pointer; }
         .reset-button { margin-top: 20px; padding: 10px 20px; }
-    </style>
+    </style> {% endcomment %}
 </head>
 <body>
+    <div>
 
-    <h1 class="text-center">Roulette System Tracker</h1>
+        <h1 style="font-size:50px" class="text-center font-bold text-blue-600">Roulette System Tracker</h1>
 
-    <!-- Buttons 0-36 for selecting the number -->
-    <div class="number-buttons">
-        {% for number in numbers %}
-            <button class="number-button" onclick="logNumber({{ number }})">{{ number }}</button>
-        {% endfor %}
-    </div>
-
-    <!-- Tables for tracking number attributes -->
-    <h2>Tracking Tables</h2>
-    <div id="tables-container">
-
-    <!-- Number Statistics Table with Control -->
-    <section>
-        <h3>Number Statistics</h3>
-        <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
-
-            <div style="margin-right: 20px;">
-                <label for="max-numbers">Max Rows in Number Statistics:</label>
-                <input type="number" id="max-numbers" value="3" min="1">
-                <button onclick="updateMaxNumbers()">Update</button>
-            </div>
-            
-            <div>  
-                <div id="number-statistics" style="display: flex; flex-direction: row-reverse; gap: 5px;"></div>
-            </div>
-            
+        <!-- Buttons 0-36 for selecting the number -->
+        <div class="number-buttons">
+            {% for number in numbers %}
+                <button class="number-button" onclick="logNumber({{ number }})">{{ number }}</button>
+            {% endfor %}
         </div>
-    </section>
 
-    <!-- Color Tracking Table with Control -->
-    <section> 
-        <h3>Color Tracking Table</h3>
-        <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
-            <div style="margin-right: 20px;">
-                <label for="maxColorRows">Max Rows in Color Table:</label>
-                <input type="number" id="maxColorRows" value="3" min="1">
-                <button onclick="updateMaxColorRows()">Update</button>
-            </div>
-            <div>
-                
-                <table id="color-table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th style="width: 50%; border: 1px solid #333;">B</th>
-                            <th style="width: 50%; border: 1px solid #333;">R</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be dynamically added here -->
-                    </tbody>
-                </table>
-            </div>
+        <!-- Tables for tracking number attributes -->
+        <h2>Tracking Tables</h2>
+        <div id="tables-container" class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+            <!-- Number Statistics Table with Control -->
+            <section>
+                <h3>Number Statistics</h3>
+                <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+
+                    <div style="margin-right: 20px;">
+                        <label for="max-numbers">Max Rows in Number Statistics:</label>
+                        <input type="number" id="max-numbers" value="3" min="1">
+                        <button onclick="updateMaxNumbers()">Update</button>
+                    </div>
+
+                    <div>  
+                        <div id="number-statistics" style="display: flex; flex-direction: row-reverse; gap: 5px;"></div>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- Color Tracking Table with Control -->
+            <section> 
+                <h3>Color Tracking Table</h3>
+                <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    <div style="margin-right: 20px;">
+                        <label for="max-color-rows">Max Rows in Color Table:</label>
+                        <input type="number" id="max-color-rows" value="3" min="1">
+                        <button onclick="updateMaxColorRows()">Update</button>
+                    </div>
+                    <div>
+                        
+                        <table id="color-table" style="width: 100%; border-collapse: collapse;" class="w-full text-left rtl:text-right text-black dark:text-white">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%; border: 1px solid #333;">B</th>
+                                    <th style="width: 50%; border: 1px solid #333;">R</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+                <!-- Parity Tracking Table with Control -->
+
+            <section>
+                <h3>Parity Tracking Table</h3>
+                <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    <div style="margin-right: 20px;">
+                        <label for="max-parity-rows">Max Rows in Parity Table:</label>
+                        <input type="number" id="max-parity-rows" value="3" min="1">
+                        <button onclick="updateMaxParityRows()">Update</button>
+                    </div>
+                    <div>
+                        
+                        <table id="parity-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%; border: 1px solid #333;">E</th>
+                                    <th style="width: 50%; border: 1px solid #333;">O</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Range Tracking Table with Control -->
+            <section>
+                <h3>Range Tracking Table</h3>
+                <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    <div style="margin-right: 20px;">
+                        <label for="max-range-rows">Max Rows in Range Table:</label>
+                        <input type="number" id="max-range-rows" value="3" min="1">
+                        <button onclick="updateMaxRangeRows()">Update</button>
+                    </div>
+                    <div>
+                        <table id="range-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%; border: 1px solid #333;">H</th>
+                                    <th style="width: 50%; border: 1px solid #333;">L</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
         </div>
-    </section>
-
-          <!-- Parity Tracking Table with Control -->
-
-    <section>
-        <h3>Parity Tracking Table</h3>
-        <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
-            <div style="margin-right: 20px;">
-                <label for="maxParityRows">Max Rows in Parity Table:</label>
-                <input type="number" id="maxParityRows" value="3" min="1">
-                <button onclick="updateMaxParityRows()">Update</button>
-            </div>
-            <div>
-                
-                <table id="parity-table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th style="width: 50%; border: 1px solid #333;">E</th>
-                            <th style="width: 50%; border: 1px solid #333;">O</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be dynamically added here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- Range Tracking Table with Control -->
-    <section>
-        <h3>Range Tracking Table</h3>
-        <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
-            <div style="margin-right: 20px;">
-                <label for="maxRangeRows">Max Rows in Range Table:</label>
-                <input type="number" id="maxRangeRows" value="3" min="1">
-                <button onclick="updateMaxRangeRows()">Update</button>
-            </div>
-            <div>
-                <table id="range-table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th style="width: 50%; border: 1px solid #333;">H</th>
-                            <th style="width: 50%; border: 1px solid #333;">L</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be dynamically added here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-</div>
-
-   
 
     </div>
 
     <div class="flex square.style.justifyContent">
 
-    <!-- Reset button to clear tables -->
-    <button class="reset-button" onclick="resetNumberTable()">Reset Number Table</button>
+        <!-- Reset button to clear tables -->
+        <button class="reset-button" onclick="resetNumberTable()">Reset Number Table</button>
 
-    <!-- Reset button to clear tables -->
-    <button class="reset-button" onclick="resetColorTable()">Reset Color Table</button>
+        <!-- Reset button to clear tables -->
+        <button class="reset-button" onclick="resetColorTable()">Reset Color Table</button>
 
-     <!-- Reset button to clear tables -->
-     <button class="reset-button" onclick="resetParityTable()">Reset Parity Table</button>
+        <!-- Reset button to clear tables -->
+        <button class="reset-button" onclick="resetParityTable()">Reset Parity Table</button>
 
-      <!-- Reset button to clear tables -->
-    <button class="reset-button" onclick="resetRangeTable()">Reset Range Table</button>
+        <!-- Reset button to clear tables -->
+        <button class="reset-button" onclick="resetRangeTable()">Reset Range Table</button>
 
-    <!-- Reset button to clear tables -->
-    <button class="reset-button" onclick="resetTables()">Reset All Tables</button>
+        <!-- Reset button to clear tables -->
+        <button class="reset-button" onclick="resetTables()">Reset All Tables</button>
 
     </div>
 
     <script>
         // Initialize max row settings
-        let MAX_NUMBERS = 3;
-        let MAX_COLOR_ROWS = 3;
-        let MAX_PARITY_ROWS = 3;
-        let MAX_RANGE_ROWS = 3;
+        let MAX_NUMBERS = 6;
+        let MAX_COLOR_ROWS = 6;
+        let MAX_PARITY_ROWS = 6;
+        let MAX_RANGE_ROWS = 6;
 
         // Maximum numbers per row
         const MAX_SQUARES_PER_ROW = 3;
