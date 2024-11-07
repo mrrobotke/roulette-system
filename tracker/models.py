@@ -42,7 +42,7 @@ class NumberStatistics(models.Model):
 
     # Store all records
     timestamp = models.DateTimeField(auto_now_add=True)
-    number = models.IntegerField()
+    number = models.IntegerField(default=0)
     color = models.CharField(
         max_length=2,
         choices=COLOR_CHOICES,

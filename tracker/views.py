@@ -11,6 +11,7 @@ from rest_framework import status
 from .models import NumberStatistics
 from .utils import generate_password, log_request, reset_table
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
 import json
 
 # Create your views here.
@@ -43,7 +44,7 @@ def generate_and_send_password(request):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
-
+#@login_required
 def index(request):
     
     numbers = list(range(37))  # Generates numbers from 0 to 36

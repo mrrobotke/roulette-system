@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 import json
 from tracker.configs import logger
+from tracker.utils import get_machine_id
 
 # Registration view
 def register(request):
@@ -38,6 +39,17 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
+            
+            frontendUser = list(UserProfile.objects.filter(username=username).values)
+            
+            if len(frontendUser) > 0:
+                
+                client_uuid = frontendUser[0]['client_uuid']
+                
+                if client_uuid != get_machine_id:
+                    
+                    messages.error(request, 'Unauthorized access')
+            
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -69,7 +81,7 @@ def register_endpoint(request):
             user.save()
 
             # Create the UserProfile with the phone number
-            UserProfile.objects.create(user=user, phone_number=phone_number)
+            UserProfile.objects.create(user=user, phone_number=phone_number, client_uuid=get_machine_id())
 
             return JsonResponse({"message": "Registration successful"}, status=201)
 

@@ -27,50 +27,54 @@
             <!-- Buttons 0-36 for selecting the number -->
             <div class="mt-8">
                 <p style="font-size:20px; padding-bottom: 20px;"> Press on any number to populate the tracking tables</p>
+                <div class="justify-center">
                 {% for number in numbers %}
-                    <button class="px-4 py-2 rounded-lg border border-gray-500 hover:border-blue-500 hover:bg-gray-900 font-medium
-                " onclick="logNumber({{ number }})">{{ number }}</button>
+                    <button class="numbers-button px-4 py-2 rounded-lg border border-gray-500 hover:border-sky-500 hover:bg-sky-500 font-medium justify-center" 
+                    onclick="logNumber({{ number }}, 'number-statistics')" value="{{ number}}">{{ number }}</button>
                 {% endfor %}
+                </div>
             </div>
 
             <!-- Tables for tracking number attributes -->
-            <h2 class="mt-8 font-bold text-center" style="font-size: 30px;">Tracking Tables</h2>
+            <h2 class="mt-12 font-bold text-center" style="font-size: 30px;">Tracking Tables</h2>
             <div id="tables-container" class="relative overflow-x-auto shadow-md sm:rounded-lg">
 
                 <!-- Number Statistics Table with Control -->
-                <section class="mt-8">
+                <section class="mt-8 justify-between">
                     <h3 class="text-2xl font-semibold text-gray-800">Number Statistics</h3>
-                    <div style="display: flex; align-items: flex-start; margin-bottom: 20px;" class="mt-2">
 
-                        <div style="margin-right: 20px;">
-                            <label for="max-numbers">Max Rows in Number Statistics:</label>
-                            <input type="number" id="max-numbers" value="3" min="1">
-                            <button onclick="updateMaxNumbers()">Update</button>
-                        </div>
+                    <div style="margin-right: 20px;" class="mt-8">
+                        <label for="max-numbers">Max Rows in Number Statistics:</label>
+                        <input type="number" id="max-numbers" min="1" class="border border-gray-500 rounded-lg w-32 p-1 ml-2 pl-2">
+                        <button onclick="updateMaxNumbers()" class="ml-2 border border-gray-500 px-4 py-1 rounded-md bg-gray-100">Update</button>
+                    </div>
 
-                        <div>  
-                            <div id="number-statistics" style="display: flex; flex-direction: row-reverse; gap: 5px;"></div>
+
+                        <div id="parent-number-statistics" style="margin-bottom: 20px;" class="mt-8">
+                            <div id="number-statistics" style="display: flex; flex-direction: row-reverse; gap: 5px;" class="justify-center"></div>
                         </div>
                         
-                    </div>
+                
                 </section>
 
+
+                <div class="flex justify-between grid-cols-12 gap-4 pl-4 pr-4">
                 <!-- Color Tracking Table with Control -->
-                <section class="mt-8"> 
-                    <h3>Color Tracking Table</h3>
-                    <div style="display: flex; align-items: flex-start; margin-bottom: 20px;" class="mt-2">
-                        <div style="margin-right: 20px;">
-                            <label for="max-color-rows">Max Rows in Color Table:</label>
-                            <input type="number" id="max-color-rows" value="3" min="1">
-                            <button onclick="updateMaxColorRows()">Update</button>
-                        </div>
-                        <div>
+                <section class="mt-8 grid-cols-4"> 
+                    <h3 class="text-center font-semibold text-2xl">Color Tracking Table</h3>
+                    <div style="margin-right: 20px;" class="mt-8">
+                        <label for="max-color-rows">Max Rows in Color Table:</label>
+                        <input type="number" id="max-color-rows" min="1" class="border border-gray-500 rounded-lg w-32 p-1 ml-2 pl-2">
+                        <button onclick="updateMaxColorRows()" class="ml-2 border border-gray-500 px-4 py-1 rounded-md bg-gray-100">Update</button>
+                    </div>
+                        
+                        <div style="margin-bottom: 20px;" class="mt-8">
                             
-                            <table id="color-table" style="width: 100%; border-collapse: collapse;" class="w-full text-left rtl:text-right text-black dark:text-white">
+                            <table id="color-table" style="width: 100%; border-collapse: collapse;" class="table w-full text-left rtl:text-right text-black dark:text-white">
                                 <thead>
                                     <tr>
-                                        <th style="width: 50%; border: 1px solid #333;">B</th>
-                                        <th style="width: 50%; border: 1px solid #333;">R</th>
+                                        <th style="width: 50%; border: 1px solid #333;" class="p-10 bg-black text-white">B</th>
+                                        <th style="width: 50%; border: 1px solid #333;" class="p-10 bg-red-500 text-white">R</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -78,26 +82,27 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    
                 </section>
 
                     <!-- Parity Tracking Table with Control -->
 
-                <section class="mt-8">
-                    <h3>Parity Tracking Table</h3>
-                    <div style="display: flex; align-items: flex-start; margin-bottom: 20px;" class="mt-2">
-                        <div style="margin-right: 20px;">
-                            <label for="max-parity-rows">Max Rows in Parity Table:</label>
-                            <input type="number" id="max-parity-rows" value="3" min="1">
-                            <button onclick="updateMaxParityRows()">Update</button>
-                        </div>
-                        <div>
+                <section class="mt-8 grid-cols-4">
+                    <h3 class="text-center font-semibold text-2xl">Parity Tracking Table</h3>
+                    <div style="margin-right: 20px;" class="mt-8">
+                        <label for="max-parity-rows">Max Rows in Parity Table:</label>
+                        <input type="number" id="max-parity-rows" min="1" class="border border-gray-500 rounded-lg w-32 p-1 ml-2 pl-2">
+                        <button onclick="updateMaxParityRows()" class="ml-2 border border-gray-500 px-4 py-1 rounded-md bg-gray-100">Update</button>
+                    </div>
+                   
+                        
+                        <div style="margin-bottom: 20px;" class="mt-8">
                             
                             <table id="parity-table" style="width: 100%; border-collapse: collapse;">
                                 <thead>
                                     <tr>
-                                        <th style="width: 50%; border: 1px solid #333;">E</th>
-                                        <th style="width: 50%; border: 1px solid #333;">O</th>
+                                        <th style="width: 50%; border: 1px solid #333;" class="p-10 bg-black text-white">E</th>
+                                        <th style="width: 50%; border: 1px solid #333;" class="p-10 bg-red-500 text-white">O</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -105,24 +110,25 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    
                 </section>
 
                 <!-- Range Tracking Table with Control -->
-                <section class="mt-8">
-                    <h3>Range Tracking Table</h3>
-                    <div style="display: flex; align-items: flex-start; margin-bottom: 20px;" class="mt-2">
-                        <div style="margin-right: 20px;">
+                <section class="mt-8 grid-cols-4">
+                    <h3 class="text-center font-semibold text-2xl">Range Tracking Table</h3>
+
+                     <div style="margin-right: 20px;" class="mt-8">
                             <label for="max-range-rows">Max Rows in Range Table:</label>
-                            <input type="number" id="max-range-rows" value="3" min="1" class="border border-grey-100 rounded-lg">
-                            <button onclick="updateMaxRangeRows()">Update</button>
-                        </div>
-                        <div>
+                            <input type="number" id="max-range-rows" min="1" class="border border-gray-500 rounded-lg w-32 p-1 ml-2 pl-2">
+                            <button onclick="updateMaxRangeRows()" class="ml-2 border border-gray-500 px-4 py-1 rounded-md bg-gray-100">Update</button>
+                    </div>
+                       
+                        <div style="margin-bottom: 20px;" class="mt-8">
                             <table id="range-table" style="width: 100%; border-collapse: collapse;">
                                 <thead>
                                     <tr>
-                                        <th style="width: 50%; border: 1px solid #333;">H</th>
-                                        <th style="width: 50%; border: 1px solid #333;">L</th>
+                                        <th style="width: 50%; border: 1px solid #333;" class="p-10 bg-black text-white">H</th>
+                                        <th style="width: 50%; border: 1px solid #333;" class="p-10 bg-red-500 text-white">L</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,35 +136,41 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    
                 </section>
+            </div>
 
 
             </div>
 
         </div>
 
-        <div class="flex square.style.justifyContent mt-8">
+        <div class="flex square.style.justifyContent mt-8 gap-4 justify-center">
+
+            <div>
+
+                <!-- Reset button to clear tables -->
+               <button class="reset-button border border-gray-500 px-4 py-2 rounded-md bg-gray-100" onclick="resetNumberTable()">Reset Number Table</button>
+
+           </div>
 
             <!-- Reset button to clear tables -->
-            <button class="reset-button" onclick="resetNumberTable()">Reset Number Table</button>
+            <button class="reset-button border border-gray-500 px-4 py-2 rounded-md bg-gray-100" onclick="resetColorTable()">Reset Color Table</button>
 
             <!-- Reset button to clear tables -->
-            <button class="reset-button" onclick="resetColorTable()">Reset Color Table</button>
+            <button class="reset-button border border-gray-500 px-4 py-2 rounded-md bg-gray-100" onclick="resetParityTable()">Reset Parity Table</button>
 
             <!-- Reset button to clear tables -->
-            <button class="reset-button" onclick="resetParityTable()">Reset Parity Table</button>
+            <button class="reset-button border border-gray-500 px-4 py-2 rounded-md bg-gray-100" onclick="resetRangeTable()">Reset Range Table</button>
 
             <!-- Reset button to clear tables -->
-            <button class="reset-button" onclick="resetRangeTable()">Reset Range Table</button>
-
-            <!-- Reset button to clear tables -->
-            <button class="reset-button" onclick="resetTables()">Reset All Tables</button>
+            <button class="reset-button border border-gray-500 px-4 py-2 rounded-md bg-gray-100" onclick="resetTables()">Reset All Tables</button>
 
         </div>
     </div>
     <script>
         // Initialize max row settings
+        let NUMBERS = 0;
         let MAX_NUMBERS = 6;
         let MAX_COLOR_ROWS = 6;
         let MAX_PARITY_ROWS = 6;
@@ -175,6 +187,15 @@
         const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
         const blackNumbers = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
         const greenNumbers = [0];
+
+
+        // Function to set initial values in input fields
+        function setInitialInputValues() {
+            document.getElementById("max-numbers").value = MAX_NUMBERS;
+            document.getElementById("max-color-rows").value = MAX_COLOR_ROWS;
+            document.getElementById("max-parity-rows").value = MAX_PARITY_ROWS;
+            document.getElementById("max-range-rows").value = MAX_RANGE_ROWS;
+        }
 
         // Function to update the maximum number of squares in the Number Statistics table
         function updateMaxNumbers() {
@@ -213,7 +234,7 @@
         }
 
 
-        async function logNumber(number) {
+        async function logNumber(number, div_id) {
 
             // Get the symbol and color based on the number
             const colorInfo = getColorSymbol(number);
@@ -225,7 +246,7 @@
 
             const rangeSymbol = updateRangeTable(number, colorInfo.color);
 
-            const container = document.getElementById("number-statistics");
+            const container = document.getElementById(div_id);
 
 
             // Remove the oldest square if there are more than max defined
@@ -233,15 +254,50 @@
                 container.removeChild(container.firstChild);
             }
 
-                // Check if the last row exists and if it has reached the maximum number of squares
-            {% comment %} let lastRow = container.lastChild;
 
-            if (!lastRow || lastRow.children.length >= MAX_SQUARES_PER_ROW) {
+            // Calculate the current row index
+            const totalElements = container.children.length;
+            console.log("Total Elements", totalElements);
+            const currentRowIndex = Math.floor(totalElements / MAX_SQUARES_PER_ROW);
+            console.log("Row Index", currentRowIndex);
+
+            {% comment %} // Check if the last row exists and if it has reached the maximum number of squares
+            let lastRow = container.lastChild;
+            console.log("LAST CHILD", lastRow);
+            let row = lastRow?lastRow.children.length:0;
+
+            console.log("CHILDREN", row); {% endcomment %}
+
+            {% comment %} NUMBERS = NUMBERS + 1;
+
+            console.log("Row ID: number-statistics-",currentRowIndex);
+
+            console.log("NUMBBERS:", NUMBERS);
+
+            if (NUMBERS > MAX_SQUARES_PER_ROW) {
+
+                console.log("Row ID: number-statistics-",currentRowIndex + 1);
+
                 // Create a new row if needed
                 lastRow = document.createElement("div");
+                lastRow.id = `number-statistics-${currentRowIndex + 1}`; // Use the current row index
+                lastRow.style.flexDirection = "row-reverse";
+                lastRow.style.justifyContent = "center";
                 lastRow.style.display = "flex";
                 lastRow.style.gap = "5px";
+        
                 container.prepend(lastRow); // Add the new row at the top of the container
+
+                // Update the onclick function for all buttons in the row
+                const buttons = document.getElementsByClassName("numbers-button");
+                for (let button of buttons) {
+                    button.setAttribute("onclick", `logNumber(${button.value}, number-statistics-${currentRowIndex + 1})`);
+                }
+
+                NUMBERS = 0;
+
+                console.log("Row ID: number-statistics-", currentRowIndex + 1);
+
             } {% endcomment %}
 
 
@@ -316,6 +372,7 @@
             blackCell.style.fontWeight = "bold";
             redCell.style.border = "1px solid #333";
             redCell.style.height = "40px";
+            redCell.style.background = "rgba(59, 130, 246, 0.5)";
 
             // Update the B column with the symbol and color
             blackCell.textContent = symbol;
@@ -326,7 +383,12 @@
                 if (redCell.textContent === "X") {
                     redCell.textContent = ""; // Remove the "X" if it's clicked again
                 } else {
-                    redCell.textContent = "X"; // Add an "X" if it's clicked
+                   // Add an "X" if it's clicked
+                    redCell.style.height = "40px";
+                    redCell.style.textAlign = "center";
+                    redCell.style.fontSize = "18px";
+                    redCell.style.fontWeight = "semibold";
+                    redCell.textContent = "X";
                 }
             });
 
@@ -382,6 +444,7 @@
             blackCell.style.fontWeight = "bold";
             redCell.style.border = "1px solid #333";
             redCell.style.height = "40px";
+            redCell.style.background = "rgba(59, 130, 246, 0.5)";
 
             // Update the B column with the symbol and color
             blackCell.textContent = parityInfo;
@@ -392,7 +455,12 @@
                 if (redCell.textContent === "X") {
                     redCell.textContent = ""; // Remove the "X" if it's clicked again
                 } else {
-                    redCell.textContent = "X"; // Add an "X" if it's clicked
+                    // Add an "X" if it's clicked
+                    redCell.style.height = "40px";
+                    redCell.style.textAlign = "center";
+                    redCell.style.fontSize = "18px";
+                    redCell.style.fontWeight = "semibold";
+                    redCell.textContent = "X";
                 }
             });
 
@@ -436,6 +504,7 @@
             blackCell.style.fontWeight = "bold";
             redCell.style.border = "1px solid #333";
             redCell.style.height = "40px";
+            redCell.style.background = "rgba(59, 130, 246, 0.5)";
 
             // Update the B column with the symbol and color
             blackCell.textContent = rangeInfo;
@@ -443,10 +512,14 @@
 
                        // Add click event to the R column cell
             redCell.addEventListener("click", function () {
-                if (redCell.textContent === "X") {
-                    redCell.textContent = ""; // Remove the "X" if it's clicked again
-                } else {
-                    redCell.textContent = "X"; // Add an "X" if it's clicked
+                if (redCell.textContent === "X") { // Remove the "X" if it's clicked again
+                    redCell.textContent = ""; 
+                } else { // Add an "X" if it's clicked 
+                    redCell.style.height = "40px";
+                    redCell.style.textAlign = "center";
+                    redCell.style.fontSize = "18px";
+                    redCell.style.fontWeight = "semibold";
+                    redCell.textContent = "X";
                 }
             });
 
@@ -469,7 +542,15 @@
 
         // Function to reset all tables
         function resetTables() {
+            // Clear tables
             document.querySelectorAll("table tbody").forEach(tbody => tbody.innerHTML = "");
+
+            container = document.getElementById("number-statistics");
+
+            // Clear all numbers
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+                }
         }
 
         // Function to reset range table
@@ -496,6 +577,9 @@
            function resetRangeTable() {
             document.getElementById("range-table").querySelector("tbody").innerHTML = "";
         }
+
+    // Call this function once when the page loads
+    window.onload = setInitialInputValues;
 
     </script>
 </body>

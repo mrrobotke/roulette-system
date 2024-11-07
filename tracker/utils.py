@@ -22,7 +22,6 @@ def get_machine_id():
     
     # Use machine-specific identifier
     machine_uuid = str(uuid.getnode())
-    logger.info(f'Machine ID: {machine_uuid}')
     return machine_uuid
 
 # ********************************* Log Number ********************************************************
