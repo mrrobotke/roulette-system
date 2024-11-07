@@ -1,0 +1,74 @@
+<!-- accounts/templates/accounts/register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form id="registration-form" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="button" onclick="registerUser()">Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+
+    <script>
+        async function registerUser() {
+            const form = document.getElementById('registration-form');
+            const formData = new FormData(form);
+
+            const email = formData.get('email');
+            const username = formData.get('username');
+            const phoneNumber = formData.get('phone_number');
+
+            if (!email || !username || !phoneNumber) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            try {
+                // Call the Django backend to save the user information
+                let registerResponse = await fetch("{% url 'register_endpoint' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        username: username,
+                        phone_number: phoneNumber
+                    })
+                });
+
+                if (registerResponse.ok) {
+                    // Once registration is successful, invoke the password generation endpoint
+                    let passwordResponse = await fetch("{% url 'generate-password' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ email: email })
+                    });
+
+                    if (passwordResponse.ok) {
+                        alert("Registration successful! Password has been sent to your email.");
+                    } else {
+                        alert("Error generating password. Please try again.");
+                    }
+                } else {
+                    alert("Registration failed. Please check your details and try again.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again later.");
+            }
+        }
+    </script>
+
+</body>
+</html>

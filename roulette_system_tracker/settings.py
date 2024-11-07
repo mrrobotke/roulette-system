@@ -44,8 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tracker',
+    'accounts',
     'rest_framework',
-     # 'rest_framework_swagger'
+    'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +65,7 @@ ROOT_URLCONF = 'roulette_system_tracker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,6 +94,14 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT')
     }
 }
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Change to your SMTP server
+EMAIL_PORT = 587  # Typically 587 for TLS, or 465 for SSL
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'elizabeth.w.kihungi@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'datxilhoiwxqmtgr'  # Your email password
 
 
 # Logging Configuration

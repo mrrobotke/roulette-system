@@ -7,12 +7,6 @@ PARITY_CHOICES = [(par.value, par.name) for par in Parity]
 RANGE_CHOICES = [(ranges.value, ranges.name) for ranges in Range]
 
 
-class User(models.Model):
-    
-    # Stores user's credentials
-    email = models.EmailField()
-    password = models.CharField(max_length=100)
-
 class BlackRedEntry(models.Model):
 
     color = models.CharField(
@@ -48,6 +42,7 @@ class NumberStatistics(models.Model):
 
     # Store all records
     timestamp = models.DateTimeField(auto_now_add=True)
+    number = models.IntegerField()
     color = models.CharField(
         max_length=2,
         choices=COLOR_CHOICES,

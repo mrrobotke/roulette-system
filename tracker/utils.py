@@ -1,6 +1,29 @@
 from .models import BlackRedEntry, OddEvenEntry, HighLowEntry
 from .enums import Color, Parity, Range
 from .configs import logger
+import psutil
+import random
+import string
+import uuid
+
+
+
+# ********************************* Generate Password *************************************************
+
+# Function to generate a random password
+def generate_password():
+    characters = get_machine_id() + string.ascii_letters + string.punctuation
+    logger.info(f"Characters: {characters}")
+    password = ''.join(random.choice(characters) for i in range(15))  # 10-character password
+    return password
+
+# Function to get machine's unique identifier (e.g., MAC address)
+def get_machine_id():
+    
+    # Use machine-specific identifier
+    machine_uuid = str(uuid.getnode())
+    logger.info(f'Machine ID: {machine_uuid}')
+    return machine_uuid
 
 # ********************************* Log Number ********************************************************
  
