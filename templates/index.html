@@ -9,14 +9,6 @@
 
     <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
 
-    {% comment %} <style>
-        body { font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
-        .number-buttons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
-        .number-button { padding: 10px; font-size: 16px; cursor: pointer; }
-        .reset-button { margin-top: 20px; padding: 10px 20px; }
-    </style> {% endcomment %}
 </head>
 <body>
     <div style="margin-right: 20px; margin-left: 20px;">
@@ -51,7 +43,7 @@
 
 
                         <div id="parent-number-statistics" style="margin-bottom: 20px;" class="mt-8">
-                            <div id="number-statistics" style="display: flex; flex-direction: row-reverse; gap: 5px;" class="justify-center"></div>
+                            <div id="number-statistics" style="display: flex; flex-direction: row-reverse; gap: 0px;" class="justify-center"></div>
                         </div>
                         
                 
@@ -306,14 +298,16 @@
             square.textContent = number;
             square.style.width = "40px";
             square.style.height = "40px";
-            square.style.border = "2px solid #333";
+            square.style.border = "2px solid white";
             square.style.display = "flex";
             square.style.alignItems = "center";
             square.style.justifyContent = "center";
             square.style.fontSize = "18px";
             square.style.fontWeight = "bold";
-            square.style.backgroundColor = "#f5f5f5";
-            square.style.color = colorInfo.color;
+            square.style.backgroundColor = "black";
+            square.style.color = colorInfo.color=="black"?"white":colorInfo.color;
+            square.style.backgroundColor = "black";
+            square.style.margin="0"
             
 
             // Add the new square to the left of the current squares

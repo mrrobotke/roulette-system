@@ -44,7 +44,7 @@ def generate_and_send_password(request):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
-#@login_required
+@login_required
 def index(request):
     
     numbers = list(range(37))  # Generates numbers from 0 to 36

@@ -2,3 +2,4 @@ node_modules
 venv
 .idea
 logs
+__pycache__

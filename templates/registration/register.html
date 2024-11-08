@@ -1,24 +1,75 @@
 {% load static %}
 
+{% load form_filters %}
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Roulette</title>
     <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+
 </head>
-<body>
-    <h2>Register</h2>
-    <form id="registration-form" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="button" onclick="registerUser()">Register</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+<body class="bg-gray-50">
+
+    <div class=" items-center bg-gray-50 justify-center text-center font-medium text-blue-600 mt-4">
+
+        <h2 style="font-size: 30px;">Register</h2>
+
+    </div>
+
+
+    <div  class="flex items-center justify-center bg-gray-50 py-12 px-20 sm:px-6 lg:px-8">
+
+        <form id="registration-form" method="POST" class="space-y-4 py-6 px-32 bg-white shadow-lg rounded-lg"  onsubmit="registerUser(event)">
+        
+            {% csrf_token %}
+            <div class="space-y-6 flex flex-col">
+            <div class="space-y-4">
+                <label for="{{ form.username.id_for_label }}" class="text-sm font-medium text-gray-700 pl-4">Username</label>
+                <div class="mt-1">
+                    <input type="text" id="{{ form.username.auto_id }}"  autocomplete="off" name="{{ form.username.name }}" placeholder="Jane Doe"  class="py-4 px-20 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"/>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <label for="{{ form.email.id_for_label }}" class="text-sm font-medium text-gray-700 pl-4">Email</label>
+                <div class="mt-1">
+                    <input type="email" id="{{ form.email.auto_id }}" autocomplete="on" name="{{ form.email.name }}" placeholder="jane.doe@email.com" class="py-4 px-20  border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"/>
+                </div>      
+            </div>
+
+            <div class="space-y-4">
+                <label for="{{ form.phone_number.id_for_label }}" class="text-sm font-medium text-gray-700 pl-4">Phone Number</label>
+                <div class="mt-1">
+                    <input type="tel" id="{{ form.phone_number.auto_id }}" autocomplete="on" name="{{ form.phone_number.name }}" placeholder="254712345678" class="py-4 px-20 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"/>
+                </div>   
+            </div>
+
+            <div class="flex justify-center px-10 py-2">
+
+            <button type="submit" class="shadow-lg px-6 py-2 rounded-md bg-gray-200 border-2 border-gray-200 hover:border-sky-500 hover:bg-sky-500 font-medium">Register</button>
+            
+            </div>
+        </form>
+
+        <p class="text-center pt-4">Already have an account? <a href="{% url 'login' %}" class="pl-2 text-blue-700">Login here</a></p>
+
+        
+    </div>
+
+
+    
+    
+
+
 
     <script>
-        async function registerUser() {
+        async function registerUser(event) {
+
+            event.preventDefault();
             const form = document.getElementById('registration-form');
             const formData = new FormData(form);
 
@@ -33,7 +84,8 @@
 
             try {
                 // Call the Django backend to save the user information
-                let registerResponse = await fetch("{% url 'register_endpoint' %}", {
+                let registerResponse = await fetch("{% url 'register_endpoint' %}", 
+                {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': '{{ csrf_token }}',
@@ -45,6 +97,8 @@
                         phone_number: phoneNumber
                     })
                 });
+
+                console.log(registerResponse);
 
                 if (registerResponse.ok) {
                     // Once registration is successful, invoke the password generation endpoint
@@ -63,7 +117,9 @@
                         alert("Error generating password. Please try again.");
                     }
                 } else {
-                    alert("Registration failed. Please check your details and try again.");
+                    // Parse the JSON response to get specific error message from registration
+                    let registerData = await registerResponse.json();
+                    alert(registerData.error || "Registration failed. Please check your details and try again.");
                 }
             } catch (error) {
                 console.error("Error:", error);

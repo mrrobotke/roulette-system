@@ -1,10 +1,13 @@
 from .models import BlackRedEntry, OddEvenEntry, HighLowEntry
 from .enums import Color, Parity, Range
+import platform
+import hashlib
 from .configs import logger
 import psutil
 import random
 import string
 import uuid
+import subprocess
 
 
 
@@ -17,12 +20,61 @@ def generate_password():
     password = ''.join(random.choice(characters) for i in range(15))  # 10-character password
     return password
 
+
+
+def get_windows_uuid():
+    try:
+        # Use WMIC to get the system's UUID
+        result = subprocess.check_output("wmic csproduct get UUID", shell=True)
+        return result.decode().split("\n")[1].strip()
+    except subprocess.CalledProcessError as e:
+        return f"Error fetching machine UUID: {e}"
+    
+def get_linux_uuid():
+    try:
+        # Use dmidecode to fetch the UUID from the system
+        result = subprocess.check_output("sudo dmidecode -s system-uuid", shell=True)
+        return result.decode().strip()
+    except subprocess.CalledProcessError as e:
+        return f"Error fetching machine UUID: {e}"
+    
+def get_macos_uuid():
+    try:
+        # Use ioreg to fetch the system UUID
+        result = subprocess.check_output("ioreg -rd1 -c IOPlatformExpertDevice | grep IOPlatformUUID", shell=True)
+        return result.decode().split("= ")[1].strip().strip('"')
+    except subprocess.CalledProcessError as e:
+        return f"Error fetching machine UUID: {e}"
+    
+
+
 # Function to get machine's unique identifier (e.g., MAC address)
 def get_machine_id():
     
-    # Use machine-specific identifier
-    machine_uuid = str(uuid.getnode())
-    return machine_uuid
+    
+    system_info = platform.uname()
+    unique_string = f"{system_info.system}-{system_info.node}-{system_info.machine}-{system_info.processor}"
+    print(f'Machine: {unique_string}')
+    print(f"{platform.system()}")
+    machine_id = hashlib.sha256(unique_string.encode()).hexdigest()
+    # Hash the combined string
+    return machine_id
+
+# Use machine-specific identifier
+# machine_uuid = str(uuid.getnode())
+# logger.info(f'Machine ID: {machine_uuid}')
+# return machine_uuid
+
+# os_platform = platform.system()
+# if os_platform == "Windows":
+#     return get_windows_uuid()
+# elif os_platform == "Linux":
+#     return get_linux_uuid()
+# elif os_platform == "Darwin":  # macOS
+#     return get_macos_uuid()
+# else:
+#     return f"Unsupported platform: {os_platform}"
+
 
 # ********************************* Log Number ********************************************************
  
