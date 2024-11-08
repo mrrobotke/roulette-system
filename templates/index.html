@@ -180,6 +180,33 @@
         const blackNumbers = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
         const greenNumbers = [0];
 
+        function defaultCells() {
+
+            const container = document.getElementById('number-statistics');
+
+            for (let i=0; i<MAX_NUMBERS; i++) {
+
+                 // Create a new square for the number
+            const square = document.createElement("div");
+            square.textContent = " ";
+            square.style.width = "40px";
+            square.style.height = "40px";
+            square.style.border = "2px solid white";
+            square.style.display = "flex";
+            square.style.alignItems = "center";
+            square.style.justifyContent = "center";
+            square.style.fontSize = "18px";
+            square.style.fontWeight = "bold";
+            square.style.backgroundColor = "black";
+            square.style.backgroundColor = "black";
+            square.style.margin="0"
+
+            // Add the new square to the left of the current squares
+            container.append(square);
+            }
+
+        }
+
 
         // Function to set initial values in input fields
         function setInitialInputValues() {
