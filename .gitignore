@@ -3,3 +3,4 @@ venv
 .idea
 logs
 __pycache__
+run_django.spec
