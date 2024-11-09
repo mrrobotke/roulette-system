@@ -1,30 +1,45 @@
+"""Build standalone executable for the roulette system."""
 import PyInstaller.__main__
 import sys
 import os
+from pathlib import Path
 
 def build_installer():
     """Build standalone executable for the roulette system."""
+    
+    # Get absolute paths
+    BASE_DIR = Path(__file__).resolve().parent
+    ICON_PATH = BASE_DIR / 'static' / 'img' / 'favicon.icns'
+    
+    # Verify icon exists
+    if not ICON_PATH.exists():
+        print(f"Warning: Icon file not found at {ICON_PATH}")
+        print("Building without custom icon...")
     
     # Set Django settings before building
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'roulette_system_tracker.settings')
     
     # Define build parameters
     build_params = [
-        'run_django.py',
+        'launcher.py',  # Main script
         '--name=RouletteTracker',
-        '--onedir',
-        '--windowed',
-        '--noconfirm',  # Skip confirmation prompts
-        '--clean',  # Clean PyInstaller cache
+        '--windowed',  # GUI mode
+        '--noconfirm',
+        '--clean',
+        '--target-arch=arm64',  # Specifically for M1
+        
+        # Add icon if it exists
+        f'--icon={ICON_PATH}' if ICON_PATH.exists() else None,
         
         # Add data files
-        '--add-data=templates:templates',
-        '--add-data=static:static',
-        '--add-data=tracker:tracker',
-        '--add-data=accounts:accounts',
-        '--add-data=roulette_system_tracker:roulette_system_tracker',
+        f'--add-data={BASE_DIR/"templates"}:templates',
+        f'--add-data={BASE_DIR/"static"}:static',
+        f'--add-data={BASE_DIR/"tracker"}:tracker',
+        f'--add-data={BASE_DIR/"accounts"}:accounts',
+        f'--add-data={BASE_DIR/"roulette_system_tracker"}:roulette_system_tracker',
+        f'--add-data={BASE_DIR/".env"}:.env',
         
-        # Add required imports
+        # Add required packages
         '--hidden-import=django',
         '--hidden-import=django.template.defaulttags',
         '--hidden-import=django.template.defaultfilters',
@@ -41,13 +56,14 @@ def build_installer():
         '--hidden-import=corsheaders',
         '--hidden-import=psycopg2',
         '--hidden-import=drf_yasg',
+        '--hidden-import=packaging',
         
-        # For Mac, specify the target architecture
-        '--target-arch=universal2',
-        
-        # Remove icon specification since it's causing issues
-        # '--icon=static/img/favicon.ico',
+        # Runtime hooks
+        '--runtime-hook=runtime_hooks.py',
     ]
+    
+    # Remove None values from build_params
+    build_params = [param for param in build_params if param is not None]
     
     try:
         PyInstaller.__main__.run(build_params)

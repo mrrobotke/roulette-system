@@ -1,60 +1,48 @@
+#!/usr/bin/env python
+"""
+Launcher script for the Roulette System Tracker.
+Handles environment setup and application startup.
+"""
 import os
 import sys
-import subprocess
-import platform
-import webbrowser
 from pathlib import Path
 
-def check_postgres():
-    """Check if PostgreSQL is installed and running."""
-    system = platform.system().lower()
-    try:
-        if system == 'windows':
-            subprocess.run(['pg_isready'], check=True)
-        else:
-            subprocess.run(['pg_isready', '-q'])
-        return True
-    except:
-        return False
-
 def main():
-    """Main launcher function."""
-    # Set up environment variables
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'roulette_system_tracker.settings')
-    
-    # Database configuration
-    os.environ['DB_NAME'] = 'roulette_db'
-    os.environ['DB_USERNAME'] = 'roulette_user'
-    os.environ['DB_PASSWORD'] = 'roulette123'
-    os.environ['DB_HOST'] = 'localhost'
-    os.environ['DB_PORT'] = '5432'
-    
-    # Check PostgreSQL
-    if not check_postgres():
-        print("Error: PostgreSQL is not running!")
-        print("Please install PostgreSQL and ensure it's running")
-        input("Press Enter to exit...")
-        sys.exit(1)
-
-    # Start Django
+    """Main entry point for the application."""
     try:
-        from django.core.management import execute_from_command_line
-        execute_from_command_line(['manage.py', 'migrate'])
+        # Set up Django environment
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'roulette_system_tracker.settings')
         
-        # Create superuser if it doesn't exist
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        if not User.objects.filter(username='admin').exists():
-            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+        # Add the project directory to Python path
+        if getattr(sys, 'frozen', False):
+            # Running in a bundle
+            base_dir = Path(sys._MEIPASS)
+            # Ensure sys.argv has at least one element for the autoreloader
+            if not sys.argv:
+                sys.argv.append('')
+        else:
+            # Running in normal Python environment
+            base_dir = Path(__file__).resolve().parent
         
-        # Start server and open browser
-        print("Starting Roulette System Tracker...")
-        webbrowser.open('http://localhost:8000')
-        execute_from_command_line(['manage.py', 'runserver'])
+        sys.path.insert(0, str(base_dir))
+        
+        # Initialize Django
+        import django
+        django.setup()
+        
+        # Disable autoreload in frozen environment
+        if getattr(sys, 'frozen', False):
+            os.environ['DJANGO_AUTORELOAD'] = 'false'
+            from django.core.management import execute_from_command_line
+            execute_from_command_line(['', 'runserver', '127.0.0.1:8000', '--noreload'])
+        else:
+            from django.core.management import execute_from_command_line
+            execute_from_command_line(['', 'runserver', '127.0.0.1:8000'])
         
     except Exception as e:
-        print(f"Error: {e}")
-        input("Press Enter to exit...")
+        import traceback
+        error_msg = f"Error starting application: {str(e)}\n{traceback.format_exc()}"
+        sys.stderr.write(error_msg)
         sys.exit(1)
 
 if __name__ == '__main__':

@@ -1,0 +1,105 @@
+{% load static %}
+
+{% load form_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Roulette</title>
+    <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+   
+    <div class=" items-center bg-gray-50 justify-center text-center font-medium text-blue-600 mt-4">
+
+        <h2 style="font-size: 30px;">Login</h2>
+
+    </div>
+
+
+    <div  class="flex items-center justify-center bg-gray-50 py-12 px-20 sm:px-6 lg:px-8">
+
+        <form id="login-form" method="POST" class="space-y-4 py-6 px-32 bg-white shadow-lg rounded-lg">
+        
+            {% csrf_token %}
+            <div class="space-y-6 flex flex-col">
+            <div class="space-y-4">
+                <label for="{{ form.username.id_for_label }}" class="text-sm font-medium text-gray-700 pl-4">Username</label>
+                <div class="mt-1">
+                    <input type="text" id="{{ form.username.auto_id }}" name="{{ form.username.name }}" placeholder="Jane.Doe" class="py-4 px-20 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"/>
+                </div>
+            </div>
+
+
+            <div class="space-y-4">
+                <label for="{{ form.password.id_for_label }}" class="text-sm font-medium text-gray-700 pl-4">Password</label>
+                <div class="mt-1">
+                    <input type="password" id="{{ form.password.auto_id }}"  name="{{ form.password.name }}"  class="py-4 px-20 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                </div>   
+            </div>
+
+            <div class="flex justify-center px-10 py-2">
+
+                <button type="submit" class="shadow-lg px-6 py-2 rounded-md bg-gray-200 border-2 border-gray-200 hover:border-sky-500 hover:bg-sky-500 font-medium">Login</button>
+                
+            </div>
+
+        </form>
+
+        <p class="text-center pt-4">Don't have an account? <a href="{% url 'register' %}" class="pl-4 text-blue-700">Register here</a></p>
+    </div>
+
+
+    <script>
+        async function loginUser(event) {
+            event.preventDefault();  // Prevents page reload on form submission
+    
+            const form = document.getElementById('login-form');
+            const formData = new FormData(form);
+    
+            const username = formData.get('username');
+            const password = formData.get('password');
+    
+            if (!username || !password) {
+                alert("Please fill in both username and password.");
+                return;
+            }
+    
+            try {
+                let response = await fetch("{% url 'login_endpoint' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+    
+                if (response.ok) {
+                    // Redirect or update UI on successful login
+                    window.location.href = "{% url 'home' %}";
+                } else {
+                    // Parse the response JSON to get the error message
+                    const data = await response.json();
+                    alert(data.error || "An error occurred during login.");  // Show the error message
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again later.");
+            }
+        }
+    
+        // Attach the login function to the form's submit event
+        document.getElementById('login-form').addEventListener('submit', loginUser);
+    </script>
+
+</body>
+</html>
+
+
