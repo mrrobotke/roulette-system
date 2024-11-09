@@ -6,15 +6,6 @@ import os
 import shutil
 from setuptools import setup
 
-# Determine the platform
-is_mac = sys.platform == 'darwin'
-
-# Get absolute paths for data files
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-# Get the pyenv Python path (this should be set before venv activation)
-PYENV_PREFIX = os.path.expanduser('~/.pyenv/versions/3.11.0')
-
 def clean_build_dirs():
     """Clean up build directories before starting."""
     dirs_to_clean = ['build', 'dist']
@@ -22,50 +13,51 @@ def clean_build_dirs():
         if os.path.exists(dir_name):
             shutil.rmtree(dir_name)
 
-if is_mac:
+# Common configuration
+COMMON_OPTIONS = {
+    'packages': [
+        'django',
+        'rest_framework',
+        'corsheaders',
+        'psycopg2',
+        'drf_yasg',
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'tracker',
+        'accounts',
+        'roulette_system_tracker',
+    ],
+    'includes': [
+        'packaging',
+        'packaging.version',
+        'packaging.specifiers',
+        'packaging.requirements',
+        'pkg_resources',
+    ],
+    'excludes': [
+        'matplotlib',
+        'numpy',
+        'PIL',
+    ],
+}
+
+if sys.platform == 'darwin':  # macOS
     # Clean build directories first
     clean_build_dirs()
     
-    # Get the Python framework path for pyenv installation
-    PYTHON_FRAMEWORK = os.path.join(
-        PYENV_PREFIX,
-        'lib',
-        'libpython3.11.dylib'
-    )
+    PYENV_PREFIX = os.path.expanduser('~/.pyenv/versions/3.11.0')
+    PYTHON_FRAMEWORK = os.path.join(PYENV_PREFIX, 'lib', 'libpython3.11.dylib')
     
     if not os.path.exists(PYTHON_FRAMEWORK):
         raise ValueError(f"Python framework not found at {PYTHON_FRAMEWORK}")
     
-    OPTIONS = {
+    MAC_OPTIONS = COMMON_OPTIONS.copy()
+    MAC_OPTIONS.update({
         'argv_emulation': True,
-        'packages': [
-            'django',
-            'rest_framework',
-            'corsheaders',
-            'psycopg2',
-            'drf_yasg',
-            'django.contrib.admin',
-            'django.contrib.auth',
-            'django.contrib.contenttypes',
-            'django.contrib.sessions',
-            'django.contrib.messages',
-            'django.contrib.staticfiles',
-            'tracker',
-            'accounts',
-            'roulette_system_tracker',
-        ],
-        'includes': [
-            'packaging',
-            'packaging.version',
-            'packaging.specifiers',
-            'packaging.requirements',
-            'pkg_resources',
-        ],
-        'excludes': [
-            'matplotlib',
-            'numpy',
-            'PIL',
-        ],
         'frameworks': [PYTHON_FRAMEWORK],
         'resources': ['static', 'templates', '.env'],
         'iconfile': 'static/img/favicon.icns',
@@ -81,13 +73,35 @@ if is_mac:
         'semi_standalone': False,
         'alias': False,
         'strip': False,
-    }
+    })
 
     extra_options = dict(
         app=['launcher.py'],
         data_files=[],
-        options={'py2app': OPTIONS},
+        options={'py2app': MAC_OPTIONS},
         setup_requires=['py2app'],
+    )
+
+elif sys.platform == 'win32':  # Windows
+    # Clean build directories first
+    clean_build_dirs()
+    
+    WIN_OPTIONS = COMMON_OPTIONS.copy()
+    WIN_OPTIONS.update({
+        'windows': [{
+            'script': 'launcher.py',
+            'icon_resources': [(1, 'static/img/favicon.ico')],
+        }],
+        'data_files': [
+            ('static', ['static/*']),
+            ('templates', ['templates/*']),
+            ('', ['.env']),
+        ],
+    })
+
+    extra_options = dict(
+        options={'py2exe': WIN_OPTIONS},
+        setup_requires=['py2exe'],
     )
 
 else:
